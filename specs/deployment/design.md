@@ -65,6 +65,7 @@ spec:
 - コンテナは `apps/main.py` の FastAPI アプリをポート `8000` で待ち受ける想定(uvicornの起動コマンドはDockerfile側で定義)。
 - `Service`/`Ingress`は用意しないため、動作確認時は `kubectl port-forward deployment/calculator-api 8000:8000 -n calculator-api` などで直接Podにアクセスする。
 - `Namespace`は`Deployment`より先に作成する必要がある(`kubectl apply -f k8s/namespace.yaml` → `kubectl apply -f k8s/deployment.yaml` の順、または `kubectl apply -f k8s/` で同時適用)。
+- ローカルPCの`8000`番ポートが別プロセス(別プロジェクトの`kubectl port-forward`など)に使用されている場合、`kubectl port-forward`のログが `Forwarding from [::1]:8000 -> 8000` の1行のみになり(`127.0.0.1:8000`側のbindに失敗)、`curl http://localhost:8000/...`がIPv4優先で別プロセスに接続してしまうことがある。この場合はログを確認のうえ、`kubectl port-forward -n calculator-api deployment/calculator-api 8001:8000` のようにローカル側のポートを変更してアクセスする。
 
 ## 将来の拡張(スコープ外・参考)
 
