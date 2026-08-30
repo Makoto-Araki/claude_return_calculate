@@ -48,6 +48,44 @@ class MultiplyRequest(BaseModel):
     b: PositiveInt
 
 
+class DivideRequest(BaseModel):
+    """除算リクエストボディ。
+
+    Attributes
+    ----------
+    a : PositiveInt
+        被除数。正の整数(> 0)のみ許容する。
+    b : PositiveInt
+        除数。正の整数(> 0)のみ許容する。
+    """
+
+    a: PositiveInt
+    b: PositiveInt
+
+
+class DivideResponse(BaseModel):
+    """除算エンドポイント専用のレスポンスボディ。
+
+    割り切れない場合に商が小数となるため、`result` は `int` ではなく `float` を用いる。
+
+    Attributes
+    ----------
+    operation : str
+        実行した演算名(常に "divide")。
+    a : int
+        被除数。
+    b : int
+        除数。
+    result : float
+        演算結果(a / b)。
+    """
+
+    operation: str
+    a: int
+    b: int
+    result: float
+
+
 class CalculationResponse(BaseModel):
     """四則演算エンドポイント共通のレスポンスボディ。
 
