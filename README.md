@@ -69,6 +69,45 @@ spec:
 
 設計判断の詳細・理由は [`specs/deployment/design.md`](specs/deployment/design.md) を参照。
 
+### デプロイ手順(ローカルPCのDocker Desktop上のKubernetes)
+
+> Dockerfile・`k8s/`マニフェストは実装時に作成する想定です。以下は実装完了後にローカルで動作確認する際の手順です。
+
+1. Docker Desktopの設定でKubernetesを有効化しておく(Settings > Kubernetes > Enable Kubernetes)。
+2. コンテナイメージをローカルでビルドする。
+   ```bash
+   docker build -t calculator-api:local .
+   ```
+3. 専用Namespaceを作成する。
+   ```bash
+   kubectl apply -f k8s/namespace.yaml
+   ```
+4. Deploymentを作成する。
+   ```bash
+   kubectl apply -f k8s/deployment.yaml
+   ```
+5. Podが `calculator-api` Namespace上で起動していることを確認する。
+   ```bash
+   kubectl get pods -n calculator-api
+   ```
+6. `Service`は用意していないため、`kubectl port-forward`でローカルポートに転送する。
+   ```bash
+   kubectl port-forward -n calculator-api deployment/calculator-api 8000:8000
+   ```
+7. 別ターミナルからAPIを呼び出して動作確認する。
+   ```bash
+   curl -X POST http://localhost:8000/calculate/add \
+     -H "Content-Type: application/json" \
+     -d '{"a": 10, "b": 3}'
+   ```
+8. 動作確認が終わったら、リソースを削除する。
+   ```bash
+   kubectl delete -f k8s/deployment.yaml
+   kubectl delete -f k8s/namespace.yaml
+   ```
+
+実装タスクの詳細は [`specs/deployment/tasks.md`](specs/deployment/tasks.md) を参照。
+
 ## ドキュメント構成
 
 - [`specs/`](specs/) — 演算ごと・Deploymentの要件定義(`requirements.md`)、設計(`design.md`)、実装タスク(`tasks.md`)
