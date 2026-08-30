@@ -33,6 +33,21 @@ class SubtractRequest(BaseModel):
     b: PositiveInt
 
 
+class MultiplyRequest(BaseModel):
+    """乗算リクエストボディ。
+
+    Attributes
+    ----------
+    a : PositiveInt
+        被乗数。正の整数(> 0)のみ許容する。
+    b : PositiveInt
+        乗数。正の整数(> 0)のみ許容する。
+    """
+
+    a: PositiveInt
+    b: PositiveInt
+
+
 class CalculationResponse(BaseModel):
     """四則演算エンドポイント共通のレスポンスボディ。
 

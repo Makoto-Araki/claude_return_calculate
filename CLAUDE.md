@@ -4,10 +4,10 @@
 
 ## プロジェクトの現状
 
-加算 (`add`)・減算 (`subtract`) エンドポイントのみ実装済みです。乗算・除算・デプロイ関連(Dockerfile、Kubernetesマニフェスト)は、要件・設計の整理段階で作成した `specs/` ディレクトリのみが存在し、まだ**仕様のみ**の状態です。
+加算 (`add`)・減算 (`subtract`)・乗算 (`multiply`) エンドポイントのみ実装済みです。除算・デプロイ関連(Dockerfile、Kubernetesマニフェスト)は、要件・設計の整理段階で作成した `specs/` ディレクトリのみが存在し、まだ**仕様のみ**の状態です。
 
-- 実装済み: `apps/`(FastAPIアプリ本体)、`pyproject.toml`(uv管理の依存定義)、`tests/unit/test_add.py`・`tests/unit/test_subtract.py`(pytestユニットテスト)
-- 未実装: `apps/routers/{multiply,divide}.py`、`Dockerfile`、`k8s/`
+- 実装済み: `apps/`(FastAPIアプリ本体)、`pyproject.toml`(uv管理の依存定義)、`tests/unit/test_add.py`・`tests/unit/test_subtract.py`・`tests/unit/test_multiply.py`(pytestユニットテスト)
+- 未実装: `apps/routers/divide.py`、`Dockerfile`、`k8s/`
 
 主なコマンド([uv](https://docs.astral.sh/uv/)を使用):
 
