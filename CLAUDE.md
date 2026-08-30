@@ -75,6 +75,28 @@ k8s/
 
 各演算の実装には**必ずユニットテストコードを併せて出力する**こと。出力先は `tests/unit/` 配下とし、演算ごとに個別のテストファイル(`test_add.py` など)に分ける。テストケースは各 `specs/<operation>/tasks.md` に列挙された正常系・異常系の項目を網羅すること。
 
+## Docstringの方針
+
+関数・メソッドにはNumPyスタイルのdocstringを付与すること(`Parameters` / `Returns` セクションを`----`の下線で区切る形式)。
+
+```python
+def add(a: int, b: int) -> int:
+    """2つの整数を加算する。
+
+    Parameters
+    ----------
+    a : int
+        被加数。
+    b : int
+        加数。
+
+    Returns
+    -------
+    int
+        a + b の結果。
+    """
+```
+
 ## PR作成時の言語
 
 PRのタイトル・本文は日本語で記述すること。
