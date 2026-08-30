@@ -2,23 +2,44 @@
 
 2個の正の整数に対して四則演算(加算・減算・乗算・除算)を行う、シンプルなAPIサーバー。
 
-> 本リポジトリは現時点では仕様のみの段階です。実装状況の詳細は [CLAUDE.md](CLAUDE.md) を参照してください。
+> 加算 (`add`) のみ実装済みです。減算・乗算・除算は未実装(仕様のみ)です。実装状況の詳細は [CLAUDE.md](CLAUDE.md) を参照してください。
 
 ## API仕様
 
-| 演算 | エンドポイント | リクエストボディ | 成功時レスポンス |
-|---|---|---|---|
-| 加算 | `POST /calculate/add` | `{"a": 10, "b": 3}` | `{"operation": "add", "a": 10, "b": 3, "result": 13}` |
-| 減算 | `POST /calculate/subtract` | `{"a": 10, "b": 3}` | `{"operation": "subtract", "a": 10, "b": 3, "result": 7}` |
-| 乗算 | `POST /calculate/multiply` | `{"a": 10, "b": 3}` | `{"operation": "multiply", "a": 10, "b": 3, "result": 30}` |
-| 除算 | `POST /calculate/divide` | `{"a": 10, "b": 3}` | `{"operation": "divide", "a": 10, "b": 3, "result": 3.3333333333333335}` |
+| 演算 | エンドポイント | リクエストボディ | 成功時レスポンス | 実装状況 |
+|---|---|---|---|---|
+| 加算 | `POST /calculate/add` | `{"a": 10, "b": 3}` | `{"operation": "add", "a": 10, "b": 3, "result": 13}` | 実装済み |
+| 減算 | `POST /calculate/subtract` | `{"a": 10, "b": 3}` | `{"operation": "subtract", "a": 10, "b": 3, "result": 7}` | 未実装 |
+| 乗算 | `POST /calculate/multiply` | `{"a": 10, "b": 3}` | `{"operation": "multiply", "a": 10, "b": 3, "result": 30}` | 未実装 |
+| 除算 | `POST /calculate/divide` | `{"a": 10, "b": 3}` | `{"operation": "divide", "a": 10, "b": 3, "result": 3.3333333333333335}` | 未実装 |
 
 - `a`, `b` は**正の整数(1以上)のみ**を受け付ける。`0`・負数・小数・非数値・欠落はすべて `422 Unprocessable Entity` を返す。
 - 各エンドポイントの詳細な受け入れ基準・設計は [`specs/{add,subtract,multiply,divide}/`](specs/) を参照。
 
-## 技術スタック(計画)
+## 技術スタック
 
-Python 3.12+ / FastAPI / Pydantic v2 / pytest + httpx
+Python 3.12+ / FastAPI / Pydantic v2 / pytest + httpx / [uv](https://docs.astral.sh/uv/)(依存関係・仮想環境管理)
+
+## セットアップとローカル実行
+
+```bash
+# 依存関係のインストール(Python 3.12の仮想環境を .venv に作成)
+uv sync
+
+# 開発サーバーの起動(http://localhost:8000)
+uv run uvicorn apps.main:app --reload
+
+# ユニットテストの実行
+uv run pytest tests/unit/ -v
+```
+
+動作確認例:
+
+```bash
+curl -X POST http://localhost:8000/calculate/add \
+  -H "Content-Type: application/json" \
+  -d '{"a": 10, "b": 3}'
+```
 
 ## 実行環境: Kubernetes (Docker Desktop)
 
