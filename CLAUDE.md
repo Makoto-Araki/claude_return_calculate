@@ -4,7 +4,18 @@
 
 ## プロジェクトの現状
 
-このリポジトリは現時点では**仕様のみ**の状態です。アプリケーションコード、`pyproject.toml`、テストスイート、Dockerfile、Kubernetesマニフェストはまだ存在せず、要件・設計の整理段階で作成した `specs/` ディレクトリと [`README.md`](README.md) のみが存在します。実装が始まるまで、ビルド・lint・テストの実行コマンドはありません。
+加算 (`add`) エンドポイントのみ実装済みです。減算・乗算・除算・デプロイ関連(Dockerfile、Kubernetesマニフェスト)は、要件・設計の整理段階で作成した `specs/` ディレクトリのみが存在し、まだ**仕様のみ**の状態です。
+
+- 実装済み: `apps/`(FastAPIアプリ本体)、`pyproject.toml`(uv管理の依存定義)、`tests/unit/test_add.py`(pytestユニットテスト)
+- 未実装: `apps/routers/{subtract,multiply,divide}.py`、`Dockerfile`、`k8s/`
+
+主なコマンド([uv](https://docs.astral.sh/uv/)を使用):
+
+```bash
+uv sync                                    # 依存関係のインストール
+uv run uvicorn apps.main:app --reload      # 開発サーバー起動
+uv run pytest tests/unit/ -v               # ユニットテスト実行
+```
 
 ## プロジェクトの目的
 
