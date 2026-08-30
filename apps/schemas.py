@@ -18,6 +18,21 @@ class AddRequest(BaseModel):
     b: PositiveInt
 
 
+class SubtractRequest(BaseModel):
+    """減算リクエストボディ。
+
+    Attributes
+    ----------
+    a : PositiveInt
+        被減数。正の整数(> 0)のみ許容する。
+    b : PositiveInt
+        減数。正の整数(> 0)のみ許容する。
+    """
+
+    a: PositiveInt
+    b: PositiveInt
+
+
 class CalculationResponse(BaseModel):
     """四則演算エンドポイント共通のレスポンスボディ。
 
