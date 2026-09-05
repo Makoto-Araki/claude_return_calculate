@@ -1,5 +1,7 @@
 """FastAPIアプリのエントリポイント。各演算ルーターをここに登録する。"""
 
+import os
+
 from fastapi import FastAPI
 
 from apps.routers import add, divide, multiply, subtract
