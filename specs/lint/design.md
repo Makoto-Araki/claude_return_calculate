@@ -44,6 +44,7 @@ uv run mypy apps/                # 型チェック(appsディレクトリのみ�
 
 - lint (`ruff check`): `apps/`, `tests/`(テストコードも対象に含め、規約を統一する)
 - 型チェック (`mypy`): `apps/` のみ(`tests/`はpytestのfixtureやパラメタライズ記法でmypyとの相性が悪いケースがあるため、初期導入時は対象外とする)
+- `ruff format --check .` は `specs/*.md` 内のPythonコードブロックも整形対象に含めてしまうため、`[tool.ruff]` に `extend-exclude = ["specs"]` を設定し、`specs/` を対象外とする(設計ドキュメント内のコード例は実行対象のソースコードではないため)。
 
 ## 処理フロー(開発者の運用)
 

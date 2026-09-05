@@ -15,6 +15,9 @@
 uv sync                                    # 依存関係のインストール
 uv run uvicorn apps.main:app --reload      # 開発サーバー起動
 uv run pytest tests/unit/ -v               # ユニットテスト実行
+uv run ruff check .                        # lint実行
+uv run ruff format --check .               # フォーマット差分チェック(適用しない)
+uv run mypy apps/                          # 型チェック(appsディレクトリのみ対象)
 ```
 
 ## プロジェクトの目的
