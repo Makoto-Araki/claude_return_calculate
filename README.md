@@ -2,16 +2,16 @@
 
 2個の正の整数に対して四則演算(加算・減算・乗算・除算)を行う、シンプルなAPIサーバー。
 
-> 加算 (`add`) のみ実装済みです。減算・乗算・除算は未実装(仕様のみ)です。実装状況の詳細は [CLAUDE.md](CLAUDE.md) を参照してください。
+> 加算・減算・乗算・除算の四則演算エンドポイントはすべて実装済みです。デプロイ関連(Dockerfile、Kubernetesマニフェスト)は仕様のみの状態です。実装状況の詳細は [CLAUDE.md](CLAUDE.md) を参照してください。
 
 ## API仕様
 
 | 演算 | エンドポイント | リクエストボディ | 成功時レスポンス | 実装状況 |
 |---|---|---|---|---|
 | 加算 | `POST /calculate/add` | `{"a": 10, "b": 3}` | `{"operation": "add", "a": 10, "b": 3, "result": 13}` | 実装済み |
-| 減算 | `POST /calculate/subtract` | `{"a": 10, "b": 3}` | `{"operation": "subtract", "a": 10, "b": 3, "result": 7}` | 未実装 |
-| 乗算 | `POST /calculate/multiply` | `{"a": 10, "b": 3}` | `{"operation": "multiply", "a": 10, "b": 3, "result": 30}` | 未実装 |
-| 除算 | `POST /calculate/divide` | `{"a": 10, "b": 3}` | `{"operation": "divide", "a": 10, "b": 3, "result": 3.3333333333333335}` | 未実装 |
+| 減算 | `POST /calculate/subtract` | `{"a": 10, "b": 3}` | `{"operation": "subtract", "a": 10, "b": 3, "result": 7}` | 実装済み |
+| 乗算 | `POST /calculate/multiply` | `{"a": 10, "b": 3}` | `{"operation": "multiply", "a": 10, "b": 3, "result": 30}` | 実装済み |
+| 除算 | `POST /calculate/divide` | `{"a": 10, "b": 3}` | `{"operation": "divide", "a": 10, "b": 3, "result": 3.3333333333333335}` | 実装済み |
 
 - `a`, `b` は**正の整数(1以上)のみ**を受け付ける。`0`・負数・小数・非数値・欠落はすべて `422 Unprocessable Entity` を返す。
 - 各エンドポイントの詳細な受け入れ基準・設計は [`specs/{add,subtract,multiply,divide}/`](specs/) を参照。
@@ -31,6 +31,15 @@ uv run uvicorn apps.main:app --reload
 
 # ユニットテストの実行
 uv run pytest tests/unit/ -v
+
+# lint実行
+uv run ruff check .
+
+# フォーマット差分チェック(適用しない)
+uv run ruff format --check .
+
+# 型チェック(appsディレクトリのみ対象)
+uv run mypy apps/
 ```
 
 動作確認例:
@@ -129,7 +138,11 @@ spec:
 
 実装タスクの詳細は [`specs/deployment/tasks.md`](specs/deployment/tasks.md) を参照。
 
+## CI (GitHub Actions)
+
+`main`向けPRの作成・更新時、および`main`へのマージ時に、lint・型チェック・ユニットテスト(`test`ジョブ)と`docker build`の実行確認(`docker-build`ジョブ)を自動実行する。Kubernetesへの自動デプロイ・イメージのレジストリpushはスコープ外(手動運用)。詳細は [`specs/ci/`](specs/ci/) を参照。
+
 ## ドキュメント構成
 
-- [`specs/`](specs/) — 演算ごと・Deploymentの要件定義(`requirements.md`)、設計(`design.md`)、実装タスク(`tasks.md`)
+- [`specs/`](specs/) — 演算ごと・lint・CI・Deploymentの要件定義(`requirements.md`)、設計(`design.md`)、実装タスク(`tasks.md`)
 - [`CLAUDE.md`](CLAUDE.md) — Claude Codeなど、実装を担当するAI向けの開発ガイド(ディレクトリ構成・テスト方針など)
