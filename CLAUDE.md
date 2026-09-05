@@ -8,6 +8,7 @@
 
 - 実装済み: `apps/`(FastAPIアプリ本体)、`pyproject.toml`(uv管理の依存定義)、`tests/unit/test_add.py`・`tests/unit/test_subtract.py`・`tests/unit/test_multiply.py`・`tests/unit/test_divide.py`(pytestユニットテスト)
 - 未実装: `Dockerfile`、`k8s/`
+- CI(GitHub Actions)は導入済みです。詳細は[実行環境(Kubernetes)に関する設計判断](#実行環境kubernetesに関する設計判断)の後の[CI(GitHub Actions)に関する設計判断](#cigithub-actionsに関する設計判断)を参照してください。
 
 主なコマンド([uv](https://docs.astral.sh/uv/)を使用):
 
@@ -59,6 +60,15 @@ specs/
 - ローカルPCのDocker Desktopで有効化したKubernetes上に、専用Namespace `calculator-api` 配下で `Deployment`リソースとしてデプロイする想定(本番運用は想定しない)。`default` Namespaceは使用しない。
 - リソース節約を最優先するため、レプリカ数は `1`、`livenessProbe`/`readinessProbe`は設定しない、CPU/メモリの`requests`/`limits`は最小限、という最小構成を維持すること。
 - `Service`/`Ingress`・オートスケーリングなどはスコープ外。追加する場合は要件から見直すこと。
+
+## CI(GitHub Actions)に関する設計判断
+
+詳細は [`specs/ci/`](specs/ci/) を参照。
+
+- `.github/workflows/ci-pull-request.yml`: `main`向けPRの作成・更新時(`pull_request`トリガー)に実行。
+- `.github/workflows/ci-main.yml`: `main`へのpush(マージ)時(`push`トリガー)に実行。
+- 両ファイルとも`test`ジョブ(`uv run ruff check .`・`uv run ruff format --check .`・`uv run mypy apps/`・`uv run pytest tests/unit/ -v`)と`docker-build`ジョブ(`docker build`のみ、push・デプロイなし)を持つ。
+- Kubernetesへの自動デプロイ(CD)・イメージのレジストリpushはスコープ外(`specs/deployment/`に従い手動運用)。
 
 ## 実装時のディレクトリ構成
 
